@@ -90,8 +90,11 @@ class FileStorage:
         if cls is None:
             number_of_obj = len(self.__objects.keys())
         elif cls in classes.values():
-            for key in self.__objects.keys():
-                if cls.__class__.__name__ == key.split(".")[0]:
+            for k, v in classes.items():
+                if v == cls:
+                    key = k
+            for k in self.__objects.keys():
+                if key == k.split(".")[0]:
                     number_of_obj += 1
         else:
             return None
