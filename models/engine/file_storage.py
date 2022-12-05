@@ -78,7 +78,6 @@ class FileStorage:
                 if v == cls:
                     key = "{}.{}".format(k, id)
 
-            print(key)
             if key in self.__objects.keys():
                 return self.__objects[key]
             else:
