@@ -74,10 +74,12 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
-    
+
     def get(self, cls, id):
         """ Return an instance based of the class and id """
         if cls in classes.values() and id is not None:
+            # This is a query that is being made to the database. The query is asking for the first
+            # object that matches the class and id.
             obj = self.__session.query(cls).filter(cls.id == id).first()
         else:
             obj = None
