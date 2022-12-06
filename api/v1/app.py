@@ -2,7 +2,7 @@
 """
 Endpoint (route) returns the status of an API
 """
-from flask import Flask
+from flask import Flask, jsonify
 from models.__init__ import storage
 from api.v1.views import app_views
 from os import getenv
@@ -19,6 +19,12 @@ app.register_blueprint(app_views)
 def teardown(exit):
     """ Removes the current SQLAlchemy Session """
     storage.close()
+
+
+@app.errorhandler(404)
+def errorhandler404(e):
+    """ Handles 404 error """
+    return jsonify({"error": "Not found"})
 
 
 if __name__ == "__main__":
