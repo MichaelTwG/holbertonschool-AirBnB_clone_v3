@@ -22,5 +22,24 @@
         "created_at": "2022-12-05T18:03:24.808760",
         "updated_at": "2022-12-05T18:03:24.808867",
         "__class__": "City"
+    },
+    "City.fc8ffea9-33ae-485a-bd0e-801804cef22f": {
+        "name": "Palermo",
+        "created_at": "2022-12-06T22:03:06.263192",
+        "updated_at": "2022-12-06T22:03:06.263270",
+        "id": "fc8ffea9-33ae-485a-bd0e-801804cef22f",
+        "__class__": "City"
+    },
+    "State.0bff415f-e908-48f9-83c6-c373248bcde5": {
+        "id": "0bff415f-e908-48f9-83c6-c373248bcde5",
+        "created_at": "2022-12-06T22:05:11.937113",
+        "updated_at": "2022-12-06T22:05:11.937159",
+        "__class__": "State"
+    },
+    "Amenity.41dfcf30-cd5d-4ede-8e74-888aab5a43dd": {
+        "id": "41dfcf30-cd5d-4ede-8e74-888aab5a43dd",
+        "created_at": "2022-12-06T22:05:30.344732",
+        "updated_at": "2022-12-06T22:05:30.344771",
+        "__class__": "Amenity"
     }
 }
