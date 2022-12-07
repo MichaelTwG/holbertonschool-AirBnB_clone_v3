@@ -78,12 +78,8 @@ class DBStorage:
     def get(self, cls, id):
         """ Return an instance based of the class and id """
         if cls in classes.values() and id is not None:
-            # This is a query that is being made to the database. The query is asking for the first
-            # object that matches the class and id.
-            obj = self.__session.query(cls).filter(cls.id == id).first()
-        else:
-            obj = None
-        return obj
+            return self.__session.query(cls).filter(cls.id == id).first()
+        return None
 
     def count(self, cls=None):
         """ return the number of records"""

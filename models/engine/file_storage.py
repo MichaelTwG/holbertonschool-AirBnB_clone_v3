@@ -25,7 +25,15 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """returns the dictionary __objects"""
+        """
+        If the class is not None,
+        then create a new dictionary and iterate through the objects dictionary and
+        add the key and value to the new dictionary if the class is the same as the
+        value's class or the class is the same as the value's class name.
+
+        :param cls: the class name
+        :return: A dictionary of all objects in the storage
+        """
         if cls is not None:
             new_dict = {}
             for key, value in self.__objects.items():
