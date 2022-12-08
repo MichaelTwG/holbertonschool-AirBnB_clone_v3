@@ -14,15 +14,15 @@ def get_users():
             obj.to_dict() for obj in storage.all("User").values()])
     elif request.method == "POST":
         httpDict = request.get_json()
-    if not httpDict:
-        abort(400, "Not a JSON")
-    if "name" not in httpDict:
-        abort(400, "Missing name")
-    if "email" not in httpDict:
-        abort(400, "Missing email")
-    newUser = User(**httpDict)
-    newUser.save()
-    return jsonify(newUser.to_dict()), 201
+        if not httpDict:
+            abort(400, "Not a JSON")
+        if "email" not in httpDict:
+            abort(400, "Missing email")
+        if "password" not in httpDict:
+            abort(400, "Missing password")
+        new_user = User(**httpDict)
+        new_user.save()
+        return jsonify(new_user.to_dict()), 201
 
 
 @app_views.route("/users/<user_id>", methods=["GET", "DELETE"])
