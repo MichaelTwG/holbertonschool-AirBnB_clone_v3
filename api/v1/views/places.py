@@ -16,7 +16,7 @@ def places_of_city(city_id):
 
     if request.method == "GET":
         places = storage.all("Place")
-        placesInCity = [obj.to_dict() for obj in cities.values()
+        placesInCity = [obj.to_dict() for obj in places.values()
                         if obj.city_id == city_id]
         return jsonify(placesInCity)
 
