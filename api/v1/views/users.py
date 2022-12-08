@@ -8,7 +8,7 @@ from models.state import State
 
 
 @app_views.route("/users", methods=["GET", "POST"])
-def get_users(user_id):
+def get_users():
     if request.method == "GET":
         return jsonify([
             obj.to_dict() for obj in storage.all("User").values()])
