@@ -8,14 +8,14 @@ from models.state import State
 from models.user import User
 from models.place import Place
 
-@app_views.route("/api/v1/cities/<city_id>/places", methods=["GET", "POST"])
+@app_views.route("/cities/<city_id>/places", methods=["GET", "POST"])
 def places_of_city(city_id):
-    cities = [obj.to_dict() for obj in storage.all("City").values()]
-    citiesIds = [obj['id'] for obj in cities]
-    if city_id in citiesIds:
+    cities_list = [obj.to_dict() for obj in storage.all("City").values()]
+    ids = [obj['id'] for obj in cities_list]
+    if city_id in ids:
         if request.method == "GET":
-            places = storage.all("Place")
-            city_places = [obj.to_dict() for obj in places.values()
+            cities = storage.all("Place")
+            city_places = [obj.to_dict() for obj in cities.values()
                            if obj.city_id == city_id]
             return jsonify(city_places)
         elif request.method == "POST":
