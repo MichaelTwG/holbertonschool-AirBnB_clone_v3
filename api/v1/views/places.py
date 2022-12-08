@@ -11,7 +11,7 @@ from models.state import State
 def places_of_city(city_id):
     cities = [obj.to_dict() for obj in storage.all("City").values()]
     cityIds = [obj["id"] for obj in cities]
-    if city_id not in cities:
+    if city_id not in cityIds:
         abort(404)
 
     if request.method == "GET":
