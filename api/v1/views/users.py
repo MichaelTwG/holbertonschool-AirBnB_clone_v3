@@ -43,7 +43,7 @@ def get_user_by_id(user_id):
         abort(404)
 
 
-@app_views.route("/user/<user_id>", methods=["PUT"])
+@app_views.route("/users/<user_id>", methods=["PUT"])
 def put_user(user_id):
     obj = storage.get(User, user_id)
     if obj is None:
