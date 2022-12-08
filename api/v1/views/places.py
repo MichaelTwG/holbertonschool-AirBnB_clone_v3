@@ -11,26 +11,24 @@ from models.state import State
 def places_of_city(city_id):
     cities = [obj.to_dict() for obj in storage.all("City").values()]
     cityIds = [obj["id"] for obj in cities]
-    if city_id not in cityIds:
-        abort(404)
+    if city_id in cityIds:
+        if request.method == "GET":
+            places = storage.all("Place")
+            placesInCity = [obj.to_dict() for obj in places.values()
+                            if obj.city_id == city_id]
+            return jsonify(placesInCity)
+        if request.method == "POST":
+            httpDict = request.get_json()
+            if not httpDict or type(httpDict) != dict:
+                abort(400, "Not a JSON")
+            if "name" not in httpDict:
+                abort(400, "Missing name")
 
-    if request.method == "GET":
-        places = storage.all("Place")
-        placesInCity = [obj.to_dict() for obj in places.values()
-                        if obj.city_id == city_id]
-        return jsonify(placesInCity)
-
-    if request.method == "POST":
-        httpDict = request.get_json()
-        if not httpDict or type(httpDict) != dict:
-            abort(400, "Not a JSON")
-        if "name" not in httpDict:
-            abort(400, "Missing name")
-
-        #httpDict["state_id"] = state_id
-        newCity = City(**httpDict)
-        newCity.save()
-        return jsonify(newCity.to_dict()), 201
+            #httpDict["state_id"] = state_id
+            newCity = City(**httpDict)
+            newCity.save()
+            return jsonify(newCity.to_dict()), 201
+    abort(404)
 
 
 @app_views.route("/cities/<string:city_id>", methods=["GET", "DELETE"])
