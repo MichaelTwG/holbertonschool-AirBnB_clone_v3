@@ -9,13 +9,16 @@ from models.state import State
 
 @app_views.route("/api/v1/cities/<city_id>/places", methods=["GET", "POST"])
 def places_of_city(city_id):
-    city = storage.get(City, city_id)
-    if city is None:
+    cities = [obj.to_dict() for obj in storage.all("City").values()]
+    cityIds = [obj["id"] for obj in cities]
+    if city_id not in cities:
         abort(404)
 
     if request.method == "GET":
-        places = [place.to_dict() for place in city.places]
-        return jsonify(places)
+        places = storage.all("Place")
+        placesInCity = [obj.to_dict() for obj in cities.values()
+                        if obj.city_id == city_id]
+        return jsonify(placesInCity)
 
     if request.method == "POST":
         httpDict = request.get_json()
