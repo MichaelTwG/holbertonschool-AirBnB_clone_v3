@@ -25,7 +25,7 @@ def get_users():
     return jsonify(newUser.to_dict()), 201
 
 
-@app_views.route("/api/v1/users/<user_id>", methods=["GET", "DELETE"])
+@app_views.route("/users/<user_id>", methods=["GET", "DELETE"])
 def get_user_by_id(user_id):
     obj = storage.get(User, user_id)
     if request.method == "GET":
