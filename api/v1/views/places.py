@@ -28,7 +28,8 @@ def places_of_city(city_id):
             newCity = City(**httpDict)
             newCity.save()
             return jsonify(newCity.to_dict()), 201
-    abort(404)
+    else:
+        abort(404)
 
 
 @app_views.route("/cities/<string:city_id>", methods=["GET", "DELETE"])
