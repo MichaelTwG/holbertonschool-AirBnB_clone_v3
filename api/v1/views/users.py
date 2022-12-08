@@ -50,7 +50,7 @@ def put_user(user_id):
         abort(404)
 
     updated_dict = request.get_json()
-    if updated_dict is None or type(updated_dict) != dict:
+    if not updated_dict:
         abort(400, "Not a JSON")
     for key, value in updated_dict.items():
         if key not in ["id", "created_at", "updated_at", "email"]:
