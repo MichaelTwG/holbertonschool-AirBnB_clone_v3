@@ -5,29 +5,34 @@ from flask import jsonify, abort, request
 from models.__init__ import storage
 from models.city import City
 from models.state import State
-
+from models.user import User
+from models.place import Place
 
 @app_views.route("/api/v1/cities/<city_id>/places", methods=["GET", "POST"])
 def places_of_city(city_id):
     cities = [obj.to_dict() for obj in storage.all("City").values()]
-    cityIds = [obj["id"] for obj in cities]
-    if city_id in cityIds:
+    citiesIds = [obj['id'] for obj in cities]
+    if city_id in citiesIds:
         if request.method == "GET":
             places = storage.all("Place")
-            placesInCity = [obj.to_dict() for obj in places.values()
-                            if obj.city_id == city_id]
-            return jsonify(placesInCity)
-        if request.method == "POST":
-            httpDict = request.get_json()
-            if not httpDict or type(httpDict) != dict:
-                abort(400, "Not a JSON")
-            if "name" not in httpDict:
-                abort(400, "Missing name")
-
-            #httpDict["state_id"] = state_id
-            newCity = City(**httpDict)
-            newCity.save()
-            return jsonify(newCity.to_dict()), 201
+            city_places = [obj.to_dict() for obj in places.values()
+                           if obj.city_id == city_id]
+            return jsonify(city_places)
+        elif request.method == "POST":
+            req_json = request.get_json()
+            if not req_json:
+                abort(400, 'Not a JSON')
+            if not req_json.get("user_id"):
+                abort(400, "Missing user_id")
+            user = storage.get(User, req_json.get("user_id"))
+            if not user:
+                abort(404, "Not found")
+            if 'name' not in req_json:
+                abort(400, 'Missing name')
+            req_json["city_id"] = city_id
+            new_place = Place(**req_json)
+            new_place.save()
+            return jsonify(new_place.to_dict()), 201
     else:
         abort(404)
 
