@@ -9,27 +9,18 @@ from models.state import State
 
 @app_views.route("/users", methods=["GET", "POST"])
 def get_users(user_id):
-    user = storage.get(User, user_id)
-    if user is None:
-        abort(404)
-
     if request.method == "GET":
-        ci = []
-        for st in user.cities:
-            ci.append(st.to_dict())
-        return jsonify(ci)
-
-    if request.method == "POST":
+        return jsonify([
+            obj.to_dict() for obj in storage.all("User").values()])
+    elif request.method == "POST":
         httpDict = request.get_json()
-        if not httpDict or type(httpDict) != dict:
-            abort(400, "Not a JSON")
-        if "name" not in httpDict:
-            abort(400, "Missing name")
-
-        httpDict["user_id"] = user_id
-        newUser = User(**httpDict)
-        newUser.save()
-        return jsonify(newUser.to_dict()), 201
+    if not httpDict:
+        abort(400, "Not a JSON")
+    if "name" not in httpDict:
+        abort(400, "Missing name")
+    newUser = User(**httpDict)
+    newUser.save()
+    return jsonify(newUser.to_dict()), 201
 
 
 @app_views.route("/api/v1/users/<user_id>", methods=["GET", "DELETE"])
