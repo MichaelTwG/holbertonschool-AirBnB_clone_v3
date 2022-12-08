@@ -18,6 +18,8 @@ def get_users(user_id):
         abort(400, "Not a JSON")
     if "name" not in httpDict:
         abort(400, "Missing name")
+    if "email" not in httpDict:
+        abort(400, "Missing email")
     newUser = User(**httpDict)
     newUser.save()
     return jsonify(newUser.to_dict()), 201
