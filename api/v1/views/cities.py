@@ -6,34 +6,29 @@ from models.__init__ import storage
 from models.city import City
 from models.state import State
 
-@app_views.route("/states/<string:state_id>/cities")
+@app_views.route("/states/<string:state_id>/cities", methods=["GET", "POST"])
 def cities_of_states(state_id):
     state = storage.get(State, state_id)
     if state is None:
-        abort(404)
-    ci = []
-    for st in state.cities:
-        ci.append(st.to_dict())
-    return jsonify(ci)
+            abort(404)
 
+    if request.method == "GET":
+        ci = []
+        for st in state.cities:
+            ci.append(st.to_dict())
+        return jsonify(ci)
 
-@app_views.route("/cities", methods=["POST"])
-def get_Citys():
     if request.method == "POST":
         httpDict = request.get_json()
-    if not httpDict:
-        abort(400, "Not a JSON")
-    if "name" not in httpDict:
-        abort(400, "Missing name")
-    if "state_id" not in httpDict:
-        abort(404)
-    else:
-        state = storage.get(State, httpDict["state_id"])
-        if state is None:
-            raise(404)
-    newCity = City(**httpDict)
-    newCity.save()
-    return jsonify(newCity.to_dict()), 201
+        if not httpDict or type(httpDict) != dict:
+            abort(400, "Not a JSON")
+        if "name" not in httpDict:
+            abort(400, "Missing name")
+
+        httpDict["state_id"] = state_id
+        newCity = City(**httpDict)
+        newCity.save()
+        return jsonify(newCity.to_dict()), 201
 
 
 @app_views.route("/cities/<string:city_id>", methods=["GET", "DELETE"])
