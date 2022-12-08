@@ -6,11 +6,12 @@ from models.__init__ import storage
 from models.city import City
 from models.state import State
 
+
 @app_views.route("/states/<string:state_id>/cities", methods=["GET", "POST"])
 def cities_of_states(state_id):
     state = storage.get(State, state_id)
     if state is None:
-            abort(404)
+        abort(404)
 
     if request.method == "GET":
         ci = []
