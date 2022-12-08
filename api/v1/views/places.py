@@ -1,15 +1,14 @@
 #!/usr/bin/python3
-""" cities file """
-from api.v1.views.__init__ import app_views
+""" cities """
+from api.v1.views import app_views
 from flask import jsonify, abort, request
-from models.__init__ import storage
-from models.city import City
-from models.state import State
-from models.user import User
+from models import storage
 from models.place import Place
+from models.user import User
 
-@app_views.route("/cities/<city_id>/places", methods=["GET", "POST"])
-def places_of_city(city_id):
+
+@app_views.route('/cities/<city_id>/places', methods=["GET", "POST"])
+def places_from_city(city_id):
     cities_list = [obj.to_dict() for obj in storage.all("City").values()]
     ids = [obj['id'] for obj in cities_list]
     if city_id in ids:
@@ -37,35 +36,27 @@ def places_of_city(city_id):
         abort(404)
 
 
-@app_views.route("/cities/<string:city_id>", methods=["GET", "DELETE"])
-def get_city_by_id(city_id):
-    obj = storage.get(City, city_id)
-    if request.method == "GET":
-        if obj is None:
-            abort(404)
-        return jsonify(obj.to_dict())
-    elif request.method == "DELETE":
-        if obj is None:
-            abort(404)
-
-        storage.delete(obj)
-        storage.save()
-        return jsonify({}), 200
+@app_views.route('/places/<place_id>', methods=["GET", "DELETE", "PUT"])
+def place(place_id):
+    ''' Retrieves, modifies, or deletes a particular place '''
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
     else:
-        abort(404)
-
-
-@app_views.route("/cities/<string:city_id>", methods=["PUT"])
-def put_city(city_id):
-    obj = storage.get(City, city_id)
-    if obj is None:
-        abort(404)
-
-    updated_dict = request.get_json()
-    if updated_dict is None or type(updated_dict) != dict:
-        abort(400, "Not a JSON")
-    for key, value in updated_dict.items():
-        if key not in ["id", "created_at", "updated_at", "state_id"]:
-            setattr(obj, key, value)
-    storage.save()
-    return jsonify(obj.to_dict()), 200
+        if request.method == "GET":
+            return jsonify(place.to_dict())
+        if request.method == "DELETE":
+            storage.delete(place)
+            storage.save()
+            return {}, 200
+        elif request.method == "PUT":
+            if not request.get_json():
+                abort(400, 'Not a JSON')
+            else:
+                place = storage.get(Place, place_id)
+                for key, value in request.get_json().items():
+                    if key not in ['id', 'created_at',
+                                   'updated_at', 'city_id', 'user_id']:
+                        setattr(place, key, value)
+                storage.save()
+                return jsonify(place.to_dict()), 200
