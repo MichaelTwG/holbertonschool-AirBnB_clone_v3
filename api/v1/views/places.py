@@ -9,14 +9,14 @@ from models.user import User
 
 @app_views.route('/cities/<city_id>/places', methods=["GET", "POST"])
 def places_from_city(city_id):
-    cities_list = [obj.to_dict() for obj in storage.all("City").values()]
-    ids = [obj['id'] for obj in cities_list]
-    if city_id in ids:
+    cities = [obj.to_dict() for obj in storage.all("City").values()]
+    citiesIds = [obj['id'] for obj in cities]
+    if city_id in citiesIds:
         if request.method == "GET":
-            cities = storage.all("Place")
-            city_places = [obj.to_dict() for obj in cities.values()
+            places = storage.all("Place")
+            placesInCity = [obj.to_dict() for obj in places.values()
                            if obj.city_id == city_id]
-            return jsonify(city_places)
+            return jsonify(placesInCity)
         elif request.method == "POST":
             req_json = request.get_json()
             if not req_json:
@@ -38,7 +38,6 @@ def places_from_city(city_id):
 
 @app_views.route('/places/<place_id>', methods=["GET", "DELETE", "PUT"])
 def place(place_id):
-    ''' Retrieves, modifies, or deletes a particular place '''
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
