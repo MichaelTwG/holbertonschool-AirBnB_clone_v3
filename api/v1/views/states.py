@@ -9,7 +9,6 @@ from models.state import State
 @app_views.route("/states", methods=["GET", "POST"])
 def get_states():
     if request.method == "GET":
-        print("asdsad")
         return jsonify([
             obj.to_dict() for obj in storage.all("State").values()])
     elif request.method == "POST":
