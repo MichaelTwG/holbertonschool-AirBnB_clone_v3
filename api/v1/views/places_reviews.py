@@ -59,7 +59,7 @@ def create_review(place_id):
     else:
         user = storage.get(User, httpDict["user_id"])
         if not user:
-            abort(400)
+            abort(404)
 
     if "text" not in httpDict:
         abort(400, "Missing text")
@@ -83,7 +83,11 @@ def update_review(review_id):
         abort(400, "Not a JSON")
 
     for key, value in httpDict.items():
-        if key not in ["id", "created_at", "updated_at", "user_id", "place_id"]:
+        if key not in ["id",
+                       "created_at",
+                       "updated_at",
+                       "user_id",
+                       "place_id"]:
             setattr(review, key, value)
         storage.save()
         return jsonify(review.to_dict()), 200
