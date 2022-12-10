@@ -6,11 +6,14 @@ from flask import Flask, jsonify
 from models.__init__ import storage
 from api.v1.views import app_views
 from os import getenv
+from flask_cors import CORS
 
 HBNB_API_HOST = getenv("HBNB_API_HOST")
 HBNB_API_PORT = getenv("HBNB_API_PORT")
 
 app = Flask(__name__)
+
+CORS(app, origins='0.0.0.0')
 app.url_map.strict_slashes = False
 
 
